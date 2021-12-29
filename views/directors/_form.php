@@ -22,8 +22,8 @@ $absoluteUrl = \yii\helpers\Url::home(true);
                             <div class=" row col-md-12">
 
                                 <div class="col-md-6">
-                                    <?= $form->field($model, 'Partner_Name')->textInput() ?>
-                                    <?= $form->field($model, 'Partner_ID_No')->textInput() ?>
+                                    <?= $form->field($model, 'Partner_Name')->textInput(['required' =>  true]) ?>
+                                    <?= $form->field($model, 'Partner_ID_No')->textInput(['maxlength' => 9]) ?>
                                     <?= $form->field($model, 'Partner_Occupation')->textInput() ?>
                                     <?= $form->field($model, 'Mobile_No__x002B_254')->widget(PhoneInput::className(), [
                                     'jsOptions' => [

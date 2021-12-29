@@ -43,7 +43,10 @@ return [
         'VendorCard'=>'VendorCard', //66051
         'SupplierCategory'=>'SupplierCategory', //66057
         'SupplierPartnerDetails'=>'SupplierPartnerDetails',//66056
-        'Countries'=>'Countries'//10
+        'Countries'=>'Countries',//10
+
+        'SupplierBankAccounts' => 'SupplierBankAccounts',  //66058
+        'KenyaBanks' => 'KenyaBanks', // 66067
     ],
 
 ];

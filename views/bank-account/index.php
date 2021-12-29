@@ -13,7 +13,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Company Directors';
+$this->title = 'Supplier Bank Accounts';
 ?>
 
 
@@ -33,7 +33,7 @@ $this->title = 'Company Directors';
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <?= \yii\helpers\Html::a('Add Director',['create','Key'=> $Applicant->Key],['class' => 'add btn btn-info btn-md mr-2 ']) ?>
+                        <?= \yii\helpers\Html::a('Add',['create','Key'=> $Applicant->Key],['class' => 'add btn btn-info btn-md mr-2 ']) ?>
                     </div>
                 </div>
             </div>
@@ -94,23 +94,20 @@ $script = <<<JS
           $('#leaves').DataTable({
            
             //serverSide: true,  
-            ajax: absolute+'directors/getsignatories?AppNo='+Docnum,
+            ajax: absolute+'bank-account/list',
             paging: true,
             responsive:true,
             columns: [
                 { title: '#', data: 'index'},
-                { title: 'Name' ,data: 'Partner_Name'},
-                { title: 'ID No' ,data: 'Partner_ID_No'},
-                // { title: 'Occupation' ,data: 'Partner_Occupation'},
-                { title: 'PIN' ,data: 'PIN'},
-                // { title: 'Should Be Present' ,data: 'Must_Be_Present'}, 
-                { title: 'Phone No' ,data: 'Mobile_No__x002B_254'},   
-                { title: 'Remove' ,data: 'Remove'},             
-                { title: 'Edit' ,data: 'Update_Action'},
+                { title: 'Bank Code' ,data: 'Code'},
+                { title: 'A/C Name' ,data: 'Name'},
+                { title: 'Bank A/C No' ,data: 'Bank_Account_No'},
+                { title: 'SWIFT Code' ,data: 'SWIFT_Code'},  
+                { title: 'Actions' ,data: 'action'},
                 
             ] ,                              
            language: {
-                "zeroRecords": "No Directors to Show.."
+                "zeroRecords": "No Bank A/Cs to Show.."
             },
             
             order : [[ 0, "asc" ]]

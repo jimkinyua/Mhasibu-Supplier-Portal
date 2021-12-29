@@ -1,5 +1,7 @@
 <?php
 namespace app\controllers;
+
+use app\models\BankAccount;
 use app\models\SupplierPartnerDetails;
 use app\models\VendorCard;
 use Yii;
@@ -14,7 +16,7 @@ use yii\web\Response;
 use app\models\MemberApplicationCard;
 
 
-class DirectorsController extends Controller
+class BankAccountController extends Controller
 {
     public function behaviors()
     {
@@ -46,7 +48,7 @@ class DirectorsController extends Controller
             ],
             'contentNegotiator' =>[
                 'class' => ContentNegotiator::class,
-                'only' => ['getsignatories'],
+                'only' => ['list'],
                 'formatParam' => '_format',
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -124,12 +126,11 @@ class DirectorsController extends Controller
 
     public function actionCreate($Key){
 
-        $model = new SupplierPartnerDetails();
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-        $ApplicantionData = $this->ApplicantDetails($Key);
-        $model->Vendor_No = Yii::$app->user->identity->vendorNo;
-        $model->Partner_ID_No = substr(Yii::$app->security->generateRandomString(9),0,9);
-        //$model->Supplier_No = $ApplicantionData->No;
+        $model = new BankAccount();
+        $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
+        $model->Supplier_No = Yii::$app->user->identity->vendorNo;
+       // $model->Code = Yii::$app->security->generateRandomString(4);
+       
 
        // Make Initial Request
        $result = Yii::$app->navhelper->postData($service, $model);
@@ -137,7 +138,7 @@ class DirectorsController extends Controller
        {
            Yii::$app->navhelper->loadmodel($result, $model);
        }else{
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
            return ['note' => '<div class="alert alert-danger">Error : '.$result.'</div>'];
 
        }
@@ -145,7 +146,7 @@ class DirectorsController extends Controller
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
-                'Countries'=>$this->getCountries(),
+                'Countries'=>[],
             ]);
         }
     }
@@ -166,8 +167,8 @@ class DirectorsController extends Controller
     }
 
     public function actionUpdate(){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-        $model = new SupplierPartnerDetails();
+        $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
+        $model = new SupplierBankAccounts();
        
         $result = Yii::$app->navhelper->readByKey($service, urldecode(Yii::$app->request->get('Key')));
         
@@ -190,7 +191,7 @@ class DirectorsController extends Controller
     }
 
     public function actionDelete(){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
+        $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
         $result = Yii::$app->navhelper->deleteData($service,urldecode(Yii::$app->request->get('Key')));
         if(!is_string($result)){
             Yii::$app->session->setFlash('success','Signatory Removed Successfully .',true);
@@ -227,47 +228,38 @@ class DirectorsController extends Controller
 
 
 
-    public function actionGetsignatories($AppNo){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
+    public function actionList()
+    {
+        $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
         $filter = [
-            'Vendor_No' => Yii::$app->user->identity->vendorNo,
+            'Supplier_No' => Yii::$app->user->identity->vendorNo,
         ];
-        $signatories = Yii::$app->navhelper->getData($service,$filter);
-
-        // echo '<pre>';
-        // print_r($signatories);
-        // exit;
-
+        $results = Yii::$app->navhelper->getData($service,$filter);
 
         $result = [];
         $count = 0;
       
-        if(!is_object($signatories)){
-            foreach($signatories as $kin){
+        if(is_array($results)){
+            foreach($results as $kin){
 
-                if(empty($kin->Partner_Name) && empty($kin->Partner_ID_No)){ //Useless KIn this One
+                if(empty($kin->Name) && empty($kin->Bank_Account_No) ){ 
                     continue;
                 }
                 ++$count;
                 $link = $updateLink =  '';
-                $data = $this->ApplicantDetailWithDocNum($kin->Vendor_No);
-                if($data->Status == 'New'){
-                    $updateLink = Html::a('Edit',['update','Key'=> urlencode($kin->Key) ],['class'=>'update btn btn-info btn-md']);
-                    $link = Html::a('Remove',['delete','Key'=> urlencode($kin->Key) ],['class'=>'btn btn-danger btn-md']);
-                }else{
-                    $updateLink = '';
-                    $link = '';
-                }
+               
+               
+                $updateLink = Html::a('<i class="fas fa-edit"></i>',['update','Key'=> urlencode($kin->Key) ],['class'=>'update btn btn-info btn-md']);
+                $deletelink = Html::a('<i class="fas fa-trash"></i>',['delete','Key'=> urlencode($kin->Key) ],['class'=>'mx-2 btn btn-danger btn-md']);
+               
 
                 $result['data'][] = [
                     'index' => $count,
-                    'Partner_Name' => !empty($kin->Partner_Name)?$kin->Partner_Name:'',
-                    'Partner_ID_No' => !empty($kin->Partner_ID_No)?$kin->Partner_ID_No:'',
-                    'Partner_Occupation' => !empty($kin->Partner_Occupation)?$kin->Partner_Occupation:'',
-                    'PIN' => !empty($kin->PIN)?$kin->PIN:'',
-                    'Mobile_No__x002B_254' => !empty($kin->Mobile_No__x002B_254)?$kin->Mobile_No__x002B_254:'',
-                    'Update_Action' => $updateLink,
-                    'Remove' => $link
+                    'Code' => !empty($kin->Code)?$kin->Code:'',
+                    'Name' => !empty($kin->Name)?$kin->Name:'',
+                    'Bank_Account_No' => !empty($kin->Bank_Account_No)?$kin->Bank_Account_No:'',
+                    'SWIFT_Code' => !empty($kin->SWIFT_Code)?$kin->SWIFT_Code:'',
+                    'action' => $updateLink.$deletelink
                 ];
             }
         
@@ -289,7 +281,7 @@ class DirectorsController extends Controller
 
      /** Updates a single field */
      public function actionSetfield($field){
-        $service = 'SupplierPartnerDetails';
+        $service = 'SupplierBankAccounts';
         $value = Yii::$app->request->post('fieldValue');
        
         $result = Yii::$app->navhelper->Commit($service,[$field => $value],Yii::$app->request->post('Key'));

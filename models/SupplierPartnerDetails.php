@@ -32,6 +32,7 @@ class SupplierPartnerDetails extends Model{
             ['Email', 'email'],
             ['Partner_ID_No', 'string','min' => 8],
             [['Mobile_No__x002B_254'], PhoneInputValidator::className()],
+            ['Partner_ID_No', 'string','max' => 10]
 
         ];
     }

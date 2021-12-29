@@ -166,8 +166,10 @@ $profileAction = Yii::$app->user->identity->id;
                 <div class="breadcrumbb flat">
                     <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/' ?>" <?= Yii::$app->recruitment->currentaction('company-profile',['company-profile', 'index'])?'class="active"': '' ?>>Company Information</a>
                     <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'directors/index' ?>" <?= Yii::$app->recruitment->currentaction('directors','index')?'class="active"': '' ?>>Company Directors</a>
-                    <!-- <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'proffesional-qualifications/index' ?>" <?= Yii::$app->recruitment->currentaction('proffesional-qualifications','index')?'class="active"': '' ?>>Supplier Categories</a> -->
-                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('company-profile','declaration')?'class="active"': '' ?>>Declaration</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('bank-account','index')?'class="active"': '' ?>>Supplier Bank Accounts</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('addresses','index')?'class="active"': '' ?>>Additional Addresses</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('categories','index')?'class="active"': '' ?>>Item Categories>
+        
                 </div>
            
 

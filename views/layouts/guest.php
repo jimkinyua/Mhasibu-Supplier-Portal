@@ -14,7 +14,7 @@ use app\assets\BsAsset;
 use common\widgets\Alert;
 
 BsAsset::register($this);
-$this->title = 'NCBP -  E-Procurement';
+$this->title = Yii::$app->name;
 
 
 $webroot = Yii::getAlias(@$webroot);

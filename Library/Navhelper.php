@@ -1513,6 +1513,23 @@ class Navhelper extends Component{
 
     /**Auxilliary methods for working with models */
 
+    public function dropdown($service,$from,$to, $filterValues = ''){
+        $service = Yii::$app->params['ServiceName'][$service];
+
+        $filter = '';
+        if(isset($filterValues) && is_array($filterValues))
+        {
+            foreach($filterValues  as $key => $value){
+                $filter[] = [$key => $value];  
+            }
+        }else {
+            $filter = [];
+        }
+
+        $result = \Yii::$app->navhelper->getData($service, $filter);
+        return Yii::$app->navhelper->refactorArray($result,$from,$to);
+    }
+
     public function loadmodel($obj,$model,$exception = []){ //load object data to a model, e,g from service data to model
 
         if(!is_object($obj)){
