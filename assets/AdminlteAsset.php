@@ -37,7 +37,8 @@ class AdminlteAsset extends AssetBundle
         //'css/plugins/timepicker/bootstrap-timepicker.css',
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css',
         'css/steps.css',
-        'css/validation.css'
+        'css/validation.css',
+        'plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css'
 
     ];
     public $js = [
@@ -68,6 +69,7 @@ class AdminlteAsset extends AssetBundle
         'plugins/jquery-mapael/jquery.mapael.min.js',
         'plugins/jquery-mapael/maps/usa_states.min.js',
         'plugins/chart.js/Chart.min.js',
+        'plugins/sweetalert2/sweetalert2.min.js',
 
 
         'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.full.min.js',

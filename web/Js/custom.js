@@ -3,6 +3,19 @@
  * Written with love by @francnjamb -- Twitter
  */
 
+
+
+
+
+//Initialize Sweet Alert
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000
+});
+
  function closeInput(elm) {
   var td = elm.parentNode;
   var value = elm.value;
@@ -184,12 +197,22 @@ function globalFieldUpdate(entity,controller = false, fieldName, ev, autoPopulat
                   const parent = document.querySelector(formField);
                   const helpbBlock = parent.children[2];
                   helpbBlock.innerText = msg;
+
+                  Toast.fire({
+                    type: 'error',
+                    title: msg
+                  })
                   
               }else{ // An object represents correct details
 
                   const parent = document.querySelector(formField);
                   const helpbBlock = parent.children[2];
                   helpbBlock.innerText = '';
+
+                  Toast.fire({
+                    type: 'success',
+                    title: 'Saved Field.'
+                  })
                   
               }   
           },'json');

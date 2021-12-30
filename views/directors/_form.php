@@ -7,54 +7,61 @@ use borales\extensions\phoneInput\PhoneInput;
 $absoluteUrl = \yii\helpers\Url::home(true);
 ?>
         
-                    <h3 class="card-title">Signatory Details</h3>
+        <div class="card card-primary">
+
+            <div class="card-header card-primary">
+                <h3 class="card-title">Signatory Details</h3>
+            </div>
+                    
               
-                    <div class="card-body">
-                        <?php $form = ActiveForm::begin([
-                             'id' => 'form-directors',
-                            // 'layout' => 'horizontal',
-                             'enableClientValidation' => true,
-                             'encodeErrorSummary' => false,
-                            'options' => ['enctype' => 'multipart/form-data']]); ?>
-                        
+              <div class="card-body">
+                  <?php $form = ActiveForm::begin([
+                       'id' => 'form-directors',
+                      // 'layout' => 'horizontal',
+                       'enableClientValidation' => true,
+                       'encodeErrorSummary' => false,
+                      'options' => ['enctype' => 'multipart/form-data']]); ?>
+                  
 
-                        <div class="row">
-                            <div class=" row col-md-12">
+                  <div class="row">
+                      <div class=" row col-md-12">
 
-                                <div class="col-md-6">
-                                    <?= $form->field($model, 'Partner_Name')->textInput(['required' =>  true]) ?>
-                                    <?= $form->field($model, 'Partner_ID_No')->textInput(['maxlength' => 9]) ?>
-                                    <?= $form->field($model, 'Partner_Occupation')->textInput() ?>
-                                    <?= $form->field($model, 'Mobile_No__x002B_254')->widget(PhoneInput::className(), [
-                                    'jsOptions' => [
-                                        'preferredCountries' => ['ke'],
-                                    ]]) ?>
-                                
-                                </div>
+                          <div class="col-md-6">
+                              <?= $form->field($model, 'Partner_Name')->textInput(['required' =>  true]) ?>
+                              <?= $form->field($model, 'Partner_ID_No')->textInput(['maxlength' => 9]) ?>
+                              <?= $form->field($model, 'Partner_Occupation')->textInput() ?>
+                              <?= $form->field($model, 'Mobile_No__x002B_254')->widget(PhoneInput::className(), [
+                              'jsOptions' => [
+                                  'preferredCountries' => ['ke'],
+                              ]]) ?>
+                          
+                          </div>
 
-                                <div class="col-md-6">
+                          <div class="col-md-6">
 
-                                    <?= $form->field($model, 'Gender')->dropDownList([
-                                        'Female' => 'Female',
-                                        'Male' => 'Male',
-                                    ],['prompt' => 'Select Gender']) ?>
+                              <?= $form->field($model, 'Gender')->dropDownList([
+                                  'Female' => 'Female',
+                                  'Male' => 'Male',
+                              ],['prompt' => 'Select Gender']) ?>
 
-                                    <?= $form->field($model, 'Shares')->textInput(['type' => 'number']) ?>
-                                   
-                                   <?= $form->field($model, 'PIN')->textInput() ?>
+                              <?= $form->field($model, 'Shares')->textInput(['type' => 'number']) ?>
+                             
+                             <?= $form->field($model, 'PIN')->textInput() ?>
 
-                                   <?= $form->field($model, 'Nationality')->dropDownList(ArrayHelper::map($Countries, 'Code', 'Name'),['prompt' => '-- Select Option ---']) ?>
+                             <?= $form->field($model, 'Nationality')->dropDownList(ArrayHelper::map($Countries, 'Code', 'Name'),['prompt' => '-- Select Option ---']) ?>
 
 
-                                   <?= $form->field($model,'Key')->hiddenInput(['readonly' => true])->label(false) ?>
-                                </div>
+                             <?= $form->field($model,'Key')->hiddenInput(['readonly' => true])->label(false) ?>
+                          </div>
 
- 
 
-                            </div>
-                        </div>
-                       
-             </div>
+
+                      </div>
+                  </div>
+                 
+              </div>
+        </div>
+                    
                     
              </div>
             

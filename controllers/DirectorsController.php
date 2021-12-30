@@ -61,27 +61,7 @@ class DirectorsController extends Controller
         $model = new SupplierPartnerDetails();
         $VendorCardModel = new VendorCard();
 
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-
-        if(Yii::$app->recruitment->HasProfileOnDynamics(Yii::$app->user->identity->id)){
-            $service1 = Yii::$app->params['ServiceName']['VendorCard'];
-            $filter = [
-                'PortalId' => Yii::$app->user->identity->id,
-            ];
-            $result = Yii::$app->navhelper->getData($service1, $filter);     
-            $model = Yii::$app->navhelper->loadmodel($result[0],$VendorCardModel);  
-            return $this->render('index', [
-                'model'=>$model,
-                'Applicant'=>$this->ApplicantDetails($model->Key),
-            ]);
-        }
-
-
-        $ApplicantData = $this->ApplicantDetails($Key);
-        $model->Member_Category = $ApplicantData->Member_Category;
-        return $this->render('index', ['model' => $model,
-         'Applicant'=>$ApplicantData,
-    ]);
+        return $this->render('index');
 
     }
 
@@ -122,11 +102,11 @@ class DirectorsController extends Controller
 
 
 
-    public function actionCreate($Key){
+    public function actionCreate(){
 
         $model = new SupplierPartnerDetails();
         $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-        $ApplicantionData = $this->ApplicantDetails($Key);
+       
         $model->Vendor_No = Yii::$app->user->identity->vendorNo;
         $model->Partner_ID_No = substr(Yii::$app->security->generateRandomString(9),0,9);
         //$model->Supplier_No = $ApplicantionData->No;

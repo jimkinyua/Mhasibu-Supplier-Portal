@@ -7,9 +7,9 @@ use borales\extensions\phoneInput\PhoneInput;
 $absoluteUrl = \yii\helpers\Url::home(true);
 ?>
         
-        <div class="card">
+        <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title">Supplier Bank Accounts</h3>
+                <h3 class="card-title"><?= $this->title ?></h3>
             </div>
             <div class="card-body">
                         <?php $form = ActiveForm::begin([

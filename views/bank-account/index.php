@@ -21,24 +21,24 @@ $this->title = 'Supplier Bank Accounts';
 
     <div class="row">
         <div class="col-md-12">
-            <?= $this->render('..\company-profile\_steps', ['model'=>$Applicant]) ?>
+            <?= $this->render('..\company-profile\_steps') ?>
         </div>
     </div>
 
     <!--END THE STEPS THING--->
 
     
-    <?php if($Applicant->Status == 'New'): ?>
+   
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <?= \yii\helpers\Html::a('Add',['create','Key'=> $Applicant->Key],['class' => 'add btn btn-info btn-md mr-2 ']) ?>
+                        <?= \yii\helpers\Html::a('Add',['create'],['class' => 'add btn btn-primary btn-md mr-2 ']) ?>
                     </div>
                 </div>
             </div>
         </div>
-    <?php endif; ?>
+    
 
 
     <div class="card-body">
@@ -47,7 +47,7 @@ $this->title = 'Supplier Bank Accounts';
     </div>
 
 <input type="hidden" name="absolute" value="<?= Yii::$app->recruitment->absoluteUrl() ?>">
-<input type="hidden" name="DocNum" value="<?=$Applicant->No ?>">
+
 
 
 

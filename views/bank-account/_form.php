@@ -7,7 +7,7 @@ use borales\extensions\phoneInput\PhoneInput;
 $absoluteUrl = \yii\helpers\Url::home(true);
 ?>
         
-        <div class="card">
+        <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Supplier Bank Accounts</h3>
             </div>
