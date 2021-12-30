@@ -46,7 +46,7 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 <nav class="navbar navbar-expand-md bg-primary navbar-dark fixed-top ">
     <div class="container">
         <a href="/" class="navbar-brand">
-            <img src="<?= $webroot ?>/images/Logo.jpg" alt="MHASIBU LOGO" class="rounded-circle" width="50" height="70">
+            <img src="<?= $webroot ?>/images/logo.png" alt="MHASIBU LOGO" class="image" height="70px">
             <h3 class="d-inline align-middle">Supplier Portal</h3>
         </a>
    
@@ -80,9 +80,8 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 
         <p class="display-4 py-3 lead"><?= Yii::$app->controller->action->id == 'reset-password'?'Fill out below form to Reset your Password':'Fill out below form to login.' ?></p>
          <div class="row">
-            <div class="col-md-5 d-none d-md-block">
-                
-                <img src="<?= $webroot ?>/svgs/login.svg" class="img-fluid" />
+            <div class="col-md-5 d-none d-md-block">      
+                <img src="<?= $webroot ?>/images/login.svg" class="img-fluid" />
             </div>
              <div class="col-md-7 col-sm-12">
                

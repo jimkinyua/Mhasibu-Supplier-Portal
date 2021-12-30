@@ -46,7 +46,7 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 <nav class="navbar navbar-expand-md bg-success navbar-dark fixed-top ">
     <div class="container">
         <a href="#" class="navbar-brand">
-            <img src="<?= $webroot ?>/images/Logo.jpg" alt="NCPB LOGO" class="rounded-circle" width="50" height="70">
+            <img src="<?= $webroot ?>/images/logo.png" alt="MHASIBU LOGO" class="image" height="70px">
             <h3 class="d-inline align-middle">Supplier Portal</h3>
         </a>
    
@@ -81,7 +81,7 @@ $absoluteUrl = \yii\helpers\Url::home(true);
          <div class="row">
             <div class="col-md-5 d-none d-md-block">
                 <h1 class="display-4"> Welcome! </h1>
-                <img src="<?= $webroot ?>/svgs/welcome.svg" class="img-fluid" />
+                <img src="<?= $webroot ?>/images/sign_in.svg" class="img-fluid" />
             </div>
              <div class="col-md-7 col-sm-12">
                 <h3 class="display-4">Signup as a vendor Today.</h3>

@@ -30,21 +30,25 @@ if(Yii::$app->session->hasFlash('success')){
     <div class="body-content">
 
         <div class="row my-5">
-            <div class="col-md-8 text-center offset-md-2">
-                <h4 class="display-5">You are not a registered supplier, click button to the right to create a supplier profile</h4>
+            <div class="col-md-10 text-center offset-md-1">
+                <div class="alert alert-primary" >You are not a registered supplier, click button on the right to complete and submit a supplier profile</div>
             </div>
         </div>
 
         <div class="row">
+        <div class="col-md-10 text-center offset-md-1">
+            <div class="showcase d-flex">
+                    <div class="showcase-img">
+                            <img src="<?= $webroot ?>/images/profile.svg" class="img-fluid" />
+                    </div>
 
-           <div class="col-md-6">
-                <img src="<?= $webroot ?>/svgs/profile.svg" class="img-fluid" />
-           </div>
+                    <div class="showcase-btn my-auto">
 
-           <div class="col-md-6 justify-content-center py-4 text-center ">
-
-                <?= Html::a('Create Supplier Profile', yii\helpers\Url::toRoute('./company-profile/create'),['class' => 'btn btn-lg btn-outline-success']); ?>
-           </div>
+                            <?= Html::a('Update Supplier Profile', yii\helpers\Url::toRoute('./company-profile/update'),['class' => 'btn btn-lg btn-outline-primary']); ?>
+                    </div>
+            </div>
+        </div>
+           
 
            
            
