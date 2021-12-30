@@ -150,6 +150,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->auth_key;
     }
 
+    public function getVendorID()
+    {
+        return ($this->vendorNo)? true: false;
+    }
+
     /**
      * {@inheritdoc}
      */

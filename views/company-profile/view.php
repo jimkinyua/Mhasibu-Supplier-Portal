@@ -30,7 +30,7 @@ if(Yii::$app->session->hasFlash('success')){
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <h5><i class="icon fas fa-check"></i> Error!</h5>
                                  ';
-    echo Yii::$app->session->getFlash('success');
+    echo Yii::$app->session->getFlash('error');
     print '</div>';
 }
 ?>

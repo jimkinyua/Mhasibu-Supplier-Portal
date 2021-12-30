@@ -77,6 +77,25 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 
 <section class="signup bg-light my-5 p-5 text-center">
     <div class="container ">
+    <?php
+    //print '<pre>';
+    //print_r($_SESSION); exit;
+if(Yii::$app->session->hasFlash('success')){
+    print ' <div class="alert alert-success alert-dismissable">
+                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h5><i class="icon fas fa-check"></i> Success!</h5>
+ ';
+    echo Yii::$app->session->getFlash('success');
+    print '</div>';
+}else if(Yii::$app->session->hasFlash('error')){
+    print ' <div class="alert alert-danger alert-dismissable">
+                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h5><i class="icon fas fa-check"></i> Error!</h5>
+                                ';
+    echo Yii::$app->session->getFlash('error');
+    print '</div>';
+}
+?>
 
         <p class="display-4 py-3 lead"><?= Yii::$app->controller->action->id == 'reset-password'?'Fill out below form to Reset your Password':'Fill out below form to login.' ?></p>
          <div class="row">

@@ -63,8 +63,12 @@ class CompanyProfileController extends Controller
 
         if($model->hasProfile())
         {
-            $this->redirect(['site/view']);
+            $this->redirect(['company-profile/view']);
         }
+
+        Yii::$app->user->logout();
+
+        return $this->goHome();
 
         return $this->render('index', [
             'model'=>$model
@@ -97,6 +101,16 @@ class CompanyProfileController extends Controller
     public function actionUpdate(){
         $model = new VendorCard();
         $service = Yii::$app->params['ServiceName']['VendorCard'];
+
+        // Check for vendorID as well as account verification hook validation
+
+        if(!Yii::$app->user->identity->vendorID)
+        {
+            Yii::$app->session->setFlash('error', 'Kindly Check your email to validate your account in order to proceed, thank you.');
+            return $this->redirect(['site/index']);
+
+        }
+
         $data = Yii::$app->navhelper->findOne($service,'','No', Yii::$app->user->identity->vendorNo);
         Yii::$app->navhelper->loadmodel($data, $model);
         return $this->render('update', [
