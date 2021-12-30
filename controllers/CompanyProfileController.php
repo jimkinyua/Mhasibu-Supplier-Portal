@@ -59,58 +59,16 @@ class CompanyProfileController extends Controller
     public function actionIndex(){
         $model = new VendorCard();
         $service = Yii::$app->params['ServiceName']['VendorCard'];
-        if(Yii::$app->request->post() && $this->loadpost(Yii::$app->request->post()['VendorCard'],$model)){
-            // exit('f');
-
-            $filter = [
-                'PortalId' => Yii::$app->user->identity->id,
-            ]; 
-            $refresh = Yii::$app->navhelper->getData($service,$filter);
-            $model->Key = $refresh[0]->Key;
-            $result = Yii::$app->navhelper->updateData($service,$model);
-            if(is_object($result)){
-                Yii::$app->session->setFlash('success','Supplier Data Added Successfully',true);
-                return $this->redirect(['index']);
-            }else{
-                Yii::$app->session->setFlash('error',$result);
-                return $this->redirect(['index']);
-            }
-        }//End Saving Profile Gen data
-
-        if(Yii::$app->recruitment->HasProfileOnDynamics(Yii::$app->user->identity->id)){
-            $filter = [
-                'PortalId' => Yii::$app->user->identity->id,
-            ];
-            $result = Yii::$app->navhelper->getData($service, $filter);
-            // echo '<pre>';
-            // print_r($result);
-            // exit;
-      
-            $model = $this->loadtomodel($result[0],$model);  
-
-            return $this->render('index', [
-                'model'=>$model,
-                'Applicant'=>$this->ApplicantDetails($model->Key),
-                'SupplierCategories'=>$this->getSupplierCategoryies(),
-            ]);
-        }
-
         
 
-        //No Profile Detected. Let's Create Them One
-        $model->E_Mail = Yii::$app->user->identity->email;
-        $model->PortalId = Yii::$app->user->identity->id;
-        $model->Phone_No = Yii::$app->user->identity->companyPhoneNo;
-        $result = Yii::$app->navhelper->postData($service,$model);
-        if(is_object($result)){ //Added Sucesfully
-            //Load to Model
-            $model = $this->loadtomodel($result,$model);  
-            return $this->render('view', ['model'=>$model]);
+        if($model->hasProfile())
+        {
+            $this->redirect(['site/view']);
         }
-        Yii::$app->session->setFlash('error', $result);
-        return $this->goHome();
 
-
+        return $this->render('index', [
+            'model'=>$model
+        ]);
     }
 
     /*Created Supplier Profle*/
@@ -120,101 +78,99 @@ class CompanyProfileController extends Controller
     $model->PortalId = Yii::$app->user->identity->id;
     $model->No = Yii::$app->user->identity->vendorNo;
 
-    /*print '<pre>';
-    print_r($model); exit;*/
-
-    
+       
     $service = Yii::$app->params['ServiceName']['VendorCard'];
 
      return $this->render('create',[
          'model' => $model,
-         'towns' => [],
-         'countries' => [],
-         'scategories' => [],
+         'towns' => Yii::$app->navhelper->dropdown('PostalCodes','Code','City'),
+         'countries' => Yii::$app->navhelper->dropdown('Countries','Code','Name'),
+         'scategories' => Yii::$app->navhelper->dropdown('SupplierCategory','Category_Code','Description'),
          'locations' =>  [],
          'ShipmentMethods' => [],
-         'paymentTerms' => [],// $this->dropdown('PaymentTerms','Code','Description'),
-         'paymentMethods' => [], // $this->dropdown('PaymentMethoq1                                                                                                                                                    `aAAaszds','Code','Description'),
-         'VendorBankAccounts' => [], // $this->dropdown('VendorBankAccountList','Code','Name'),
+         'paymentTerms' =>Yii::$app->navhelper->dropdown('PaymentTerms','Code','Description'),
+         'paymentMethods' => Yii::$app->navhelper->dropdown('PaymentMethods','Code','Description')
         
      ]);
  }
 
-    public function actionDeclaration($Key){
+    public function actionUpdate(){
         $model = new VendorCard();
         $service = Yii::$app->params['ServiceName']['VendorCard'];
-        $memberApplication = Yii::$app->navhelper->readByKey($service, urldecode($Key));
-
-        $model = $this->loadtomodel($memberApplication,$model);
-
-        if($model->load(Yii::$app->request->post()) && Yii::$app->request->post()){
-         
-            $service = Yii::$app->params['ServiceName']['PortalFactory'];
-
-            $data = [
-                'applicationNo' =>  $memberApplication->Application_No,
-                'sendMail' => 1,
-                'approvalUrl' => '',
-            ];
-       
-            $result = Yii::$app->navhelper->PortalWorkFlows($service,$data,'Submitmemberprofile');
-            //       echo '<pre>';
-            // print_r($result);
-            // exit;
-            
-
-            if(!is_string($result)){
-                Yii::$app->session->setFlash('success', 'Profile Submitted Succesfully', true);
-                return $this->redirect(['site/index']);
-            }else{
-    
-                Yii::$app->session->setFlash('error', $result);
-                return $this->redirect(['index', 'Key'=>$memberApplication->Key]);
-    
-            }
-        }
-
-        return $this->render('declaration', [
+        $data = Yii::$app->navhelper->findOne($service,'','No', Yii::$app->user->identity->vendorNo);
+        Yii::$app->navhelper->loadmodel($data, $model);
+        return $this->render('update', [
             'model' => $model,
+            'towns' => Yii::$app->navhelper->dropdown('PostalCodes','Code','City'),
+            'countries' => Yii::$app->navhelper->dropdown('Countries','Code','Name'),
+            'scategories' => Yii::$app->navhelper->dropdown('SupplierCategory','Category_Code','Description'),
+            'locations' =>  [],
+            'ShipmentMethods' => [],
+            'paymentTerms' => Yii::$app->navhelper->dropdown('PaymentTerms','Code','Description'),
+            'paymentMethods' => Yii::$app->navhelper->dropdown('PaymentMethods','Code','Description')
         ]);
     }
 
-    public function getSupplierCategoryies(){
-        $service = Yii::$app->params['ServiceName']['SupplierCategory'];
-        $res = [];
-        $SupplierCategories = \Yii::$app->navhelper->getData($service);
-        foreach($SupplierCategories as $SupplierCategory){
-            if(!empty($SupplierCategory->Category_Code))
-            $res[] = [
-                'Code' => $SupplierCategory->Category_Code,
-                'Name' => $SupplierCategory->Description
-            ];
-        }
-
-        return $res;
-    }
-
-    public function ApplicantDetails($key){
+  
+    public function actionView(){
         $model = new VendorCard();
         $service = Yii::$app->params['ServiceName']['VendorCard'];
-        $memberApplication = Yii::$app->navhelper->readByKey($service, $key);
-       return $model = $this->loadtomodel($memberApplication,$model);
+        $data = Yii::$app->navhelper->findOne($service,'','No', Yii::$app->user->identity->vendorNo);
+        Yii::$app->navhelper->loadmodel($data, $model);
+
+        return $this->render('view', [
+            'model' => $model,
+            'towns' => Yii::$app->navhelper->dropdown('PostalCodes','Code','City'),
+            'countries' => Yii::$app->navhelper->dropdown('Countries','Code','Name'),
+            'scategories' => Yii::$app->navhelper->dropdown('SupplierCategory','Category_Code','Description'),
+            'locations' =>  [],
+            'ShipmentMethods' => [],
+            'paymentTerms' => Yii::$app->navhelper->dropdown('PaymentTerms','Code','Description'),
+            'paymentMethods' => Yii::$app->navhelper->dropdown('PaymentMethods','Code','Description')
+        ]);
+    }
+
+    public function actionSubmit(){
+        $model = new VendorCard();
+        $service = Yii::$app->params['ServiceName']['VendorCard'];
+        $data = Yii::$app->navhelper->findOne($service,'','No', Yii::$app->user->identity->vendorNo);
+        Yii::$app->navhelper->loadmodel($data, $model);
+
+        return $this->render('submit', ['model' => $model]);
+    }
+
+    public function actionSubmitProfile()
+    {
+        $service =  Yii::$app->params['ServiceName']['PortalFactory'];
+        $payload = ['applicationNo' => Yii::$app->user->identity->vendorNo];
+
+        $result = Yii::$app->navhelper->codeunit($service,$payload,'IanSubmitSupplierApp');
+
+        if(!is_string($result))
+        {
+            Yii::$app->session->setFlash('success','Congratulations, profile submitted Successfully.', true);
+            $this->redirect(['view']);
+        }else{
+            Yii::$app->session->setFlash('error', $result, true);
+            $this->redirect(['update']);
+        }
     }
 
 
-    // Utility Functions
-
-
-
-    public function dropdown($service,$from,$to){
-        $service = Yii::$app->params['ServiceName'][$service];
-        $result = \Yii::$app->navhelper->getData($service, []);
-        return Yii::$app->navhelper->refactorArray($result,$from,$to);
+     /** Updates a single field */
+     public function actionSetfield($field){
+        $service = 'VendorCard';
+        $value = Yii::$app->request->post('fieldValue');
+       
+        $result = Yii::$app->navhelper->Commit($service,[$field => $value],Yii::$app->request->post('Key'));
+        Yii::$app->response->format = \yii\web\response::FORMAT_JSON;
+        return $result;
+          
     }
 
+   
 
 
-
-
+   
 
 }

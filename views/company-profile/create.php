@@ -30,8 +30,8 @@ $model->isNewRecord = true;
         'scategories' => $scategories,
         'locations' => $locations,
         'ShipmentMethods' => [], //$ShipmentMethods,
-        'paymentTerms' => [], // $paymentTerms,
-        'paymentMethods' => [],// $paymentMethods,
+        'paymentTerms' => $paymentTerms,
+        'paymentMethods' => $paymentMethods,
         'VendorBankAccounts' => [], // $VendorBankAccounts
     ]) ?>
 

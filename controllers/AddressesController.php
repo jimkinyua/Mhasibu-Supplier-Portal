@@ -1,5 +1,8 @@
 <?php
 namespace app\controllers;
+
+use app\models\Addresses;
+use app\models\BankAccount;
 use app\models\SupplierPartnerDetails;
 use app\models\VendorCard;
 use Yii;
@@ -14,7 +17,7 @@ use yii\web\Response;
 use app\models\MemberApplicationCard;
 
 
-class DirectorsController extends Controller
+class AddressesController extends Controller
 {
     public function behaviors()
     {
@@ -46,7 +49,7 @@ class DirectorsController extends Controller
             ],
             'contentNegotiator' =>[
                 'class' => ContentNegotiator::class,
-                'only' => ['getsignatories'],
+                'only' => ['list'],
                 'formatParam' => '_format',
                 'formats' => [
                     'application/json' => Response::FORMAT_JSON,
@@ -85,20 +88,7 @@ class DirectorsController extends Controller
 
     }
 
-    public function getCountries(){
-        $service = Yii::$app->params['ServiceName']['Countries'];
-        $res = [];
-        $Countries = \Yii::$app->navhelper->getData($service);
-        foreach($Countries as $Country){
-            if(!empty($Country->Code))
-            $res[] = [
-                'Code' => $Country->Code,
-                'Name' => $Country->Name
-            ];
-        }
-
-        return $res;
-    }
+    
     
 
  
@@ -122,52 +112,44 @@ class DirectorsController extends Controller
 
 
 
-    public function actionCreate($Key){
+    public function actionCreate(){
 
-        $model = new SupplierPartnerDetails();
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-        $ApplicantionData = $this->ApplicantDetails($Key);
-        $model->Vendor_No = Yii::$app->user->identity->vendorNo;
-        $model->Partner_ID_No = substr(Yii::$app->security->generateRandomString(9),0,9);
-        //$model->Supplier_No = $ApplicantionData->No;
-
+        $model = new Addresses();
+        $service = Yii::$app->params['ServiceName']['SupplierAdditionalAddress'];
+        $model->Supplier_No = Yii::$app->user->identity->vendorNo;
+        $model->Post_Code = $this->getRandomPostalCode();     
+    
        // Make Initial Request
        $result = Yii::$app->navhelper->postData($service, $model);
        if(is_object($result))
        {
            Yii::$app->navhelper->loadmodel($result, $model);
        }else{
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-           return ['note' => '<div class="alert alert-danger">Error : '.$result.'</div>'];
+           Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+           echo ('<div class="alert alert-danger">Error : '.$result.'</div>');
+           return '';
 
        }
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
-                'Countries'=>$this->getCountries(),
+                'postalCodes' => Yii::$app->navhelper->dropdown('PostalCodes','Code','City'),
             ]);
         }
     }
 
-    public function getMembers(){
-        $service = Yii::$app->params['ServiceName']['Members'];
-        $res = [];
-        $Members = \Yii::$app->navhelper->getData($service);
-        foreach($Members as $Member){
-            if(!empty($Member->No))
-            $res[] = [
-                'Code' => $Member->No,
-                'Name' => $Member->Name
-            ];
-        }
-
-        return $res;
+    public function getRandomPostalCode()
+    {
+        $codes = Yii::$app->navhelper->dropdown('PostalCodes','Code','City');
+        $keys = array_keys($codes);
+        shuffle($keys);
+        return $keys[0];
     }
 
     public function actionUpdate(){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
-        $model = new SupplierPartnerDetails();
+        $service = Yii::$app->params['ServiceName']['SupplierAdditionalAddress'];
+        $model = new Addresses();
        
         $result = Yii::$app->navhelper->readByKey($service, urldecode(Yii::$app->request->get('Key')));
         
@@ -175,14 +157,14 @@ class DirectorsController extends Controller
             Yii::$app->navhelper->loadmodel($result, $model);
         }else{
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-           return ['note' => '<div class="alert alert-danger">Error : '.$result.'</div>'];
+            echo '<div class="alert alert-danger">Error : '.$result.'</div>';
         }
 
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('update', [
                 'model' => $model,
-                'Countries'=>$this->getCountries(),
+                'postalCodes' => Yii::$app->navhelper->dropdown('PostalCodes','Code','City'),
             ]);
         }
 
@@ -190,77 +172,56 @@ class DirectorsController extends Controller
     }
 
     public function actionDelete(){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
+        $service = Yii::$app->params['ServiceName']['SupplierAdditionalAddress'];
         $result = Yii::$app->navhelper->deleteData($service,urldecode(Yii::$app->request->get('Key')));
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if(!is_string($result)){
-            Yii::$app->session->setFlash('success','Signatory Removed Successfully .',true);
-            return $this->redirect(['index']);
+            return ['note' => '<div class="alert alert-success">Record Purged Successfully</div>'];
         }else{
-            Yii::$app->session->setFlash('error','Signatory Removed Successfully: '.$result,true);
-            return $this->redirect(['index']);
+            return ['note' => '<div class="alert alert-danger">Error Purging Record: '.$result.'</div>' ];
         }
     }
 
 
     public function actionView($ApplicationNo){
-        $service = Yii::$app->params['ServiceName']['leaveApplicationCard'];
-        $leaveTypes = $this->getLeaveTypes();
-        $employees = $this->getEmployees();
-
-        $filter = [
-            'Application_No' => $ApplicationNo
-        ];
-
-        $leave = Yii::$app->navhelper->getData($service, $filter);
-
-        //load nav result to model
-        $leaveModel = new AccountSignatoriesList();
-        $model = $this->loadtomodel($leave[0],$leaveModel);
-
-
-        return $this->render('view',[
-            'model' => $model,
-            'leaveTypes' => ArrayHelper::map($leaveTypes,'Code','Description'),
-            'relievers' => ArrayHelper::map($employees,'No','Full_Name'),
-        ]);
+       
     }
 
 
 
-    public function actionGetsignatories($AppNo){
-        $service = Yii::$app->params['ServiceName']['SupplierPartnerDetails'];
+    public function actionList()
+    {
+        $service = Yii::$app->params['ServiceName']['SupplierAdditionalAddress'];
         $filter = [
-            'Vendor_No' => Yii::$app->user->identity->vendorNo,
+            'Supplier_No' => Yii::$app->user->identity->vendorNo,
         ];
-        $signatories = Yii::$app->navhelper->getData($service,$filter);
-
-        // echo '<pre>';
-        // print_r($signatories);
-        // exit;
-
+        $results = Yii::$app->navhelper->getData($service,$filter);
 
         $result = [];
         $count = 0;
       
-        if(!is_object($signatories)){
-            foreach($signatories as $kin){
+        if(is_array($results)){
+            foreach($results as $kin){
 
-                if(empty($kin->Partner_Name) && empty($kin->Partner_ID_No)){ //Useless KIn this One
+                if(empty($kin->Address) && empty($kin->Post_Code) ){ 
                     continue;
                 }
                 ++$count;
                 $link = $updateLink =  '';
-                $data = $this->ApplicantDetailWithDocNum($kin->Vendor_No);
+               
+               
                 $updateLink = Html::a('<i class="fas fa-edit"></i>',['update','Key'=> urlencode($kin->Key) ],['class'=>'update btn btn-info btn-md','title' => 'Update Record.']);
                 $deletelink = Html::a('<i class="fas fa-trash"></i>',['delete','Key'=> urlencode($kin->Key) ],['class'=>'mx-2 btn btn-danger btn-md delete', 'title' => 'Purge a record.']);
+               
 
                 $result['data'][] = [
                     'index' => $count,
-                    'Partner_Name' => !empty($kin->Partner_Name)?$kin->Partner_Name:'',
-                    'Partner_ID_No' => !empty($kin->Partner_ID_No)?$kin->Partner_ID_No:'',
-                    'Partner_Occupation' => !empty($kin->Partner_Occupation)?$kin->Partner_Occupation:'',
-                    'PIN' => !empty($kin->PIN)?$kin->PIN:'',
-                    'Mobile_No__x002B_254' => !empty($kin->Mobile_No__x002B_254)?$kin->Mobile_No__x002B_254:'',
+                    'Address' => !empty($kin->Address)?$kin->Address:'',
+                    'Post_Code' => !empty($kin->Post_Code)?$kin->Post_Code:'',
+                    'City' => !empty($kin->City)?$kin->City:'',
+                    'Country_Code' => !empty($kin->Country_Code)?$kin->Country_Code:'',
+                    'Telephone_No' => !empty($kin->Telephone_No)?$kin->Telephone_No:'',
+                    'E_mail' => !empty($kin->E_mail)?$kin->E_mail:'',
                     'action' => $updateLink.$deletelink
                 ];
             }
@@ -283,7 +244,7 @@ class DirectorsController extends Controller
 
      /** Updates a single field */
      public function actionSetfield($field){
-        $service = 'SupplierPartnerDetails';
+        $service = 'SupplierAdditionalAddress';
         $value = Yii::$app->request->post('fieldValue');
        
         $result = Yii::$app->navhelper->Commit($service,[$field => $value],Yii::$app->request->post('Key'));

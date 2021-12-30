@@ -129,9 +129,8 @@ class BankAccountController extends Controller
         $model = new BankAccount();
         $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
         $model->Supplier_No = Yii::$app->user->identity->vendorNo;
-       // $model->Code = Yii::$app->security->generateRandomString(4);
-       
-
+        $model->Code = $this->getRandomCode();     
+    
        // Make Initial Request
        $result = Yii::$app->navhelper->postData($service, $model);
        if(is_object($result))
@@ -139,36 +138,30 @@ class BankAccountController extends Controller
            Yii::$app->navhelper->loadmodel($result, $model);
        }else{
            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-           return ['note' => '<div class="alert alert-danger">Error : '.$result.'</div>'];
+           echo ('<div class="alert alert-danger">Error : '.$result.'</div>');
+           return '';
 
        }
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('create', [
                 'model' => $model,
-                'Countries'=>[],
+                'banks'=> Yii::$app->navhelper->dropdown('KenyaBanks','Bank_Code','Bank_Name'),
             ]);
         }
     }
 
-    public function getMembers(){
-        $service = Yii::$app->params['ServiceName']['Members'];
-        $res = [];
-        $Members = \Yii::$app->navhelper->getData($service);
-        foreach($Members as $Member){
-            if(!empty($Member->No))
-            $res[] = [
-                'Code' => $Member->No,
-                'Name' => $Member->Name
-            ];
-        }
-
-        return $res;
+    public function getRandomCode()
+    {
+        $codes = Yii::$app->navhelper->dropdown('KenyaBanks','Bank_Code','Bank_Name');
+        $keys = array_keys($codes);
+        shuffle($keys);
+        return $keys[0];
     }
 
     public function actionUpdate(){
         $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
-        $model = new SupplierBankAccounts();
+        $model = new BankAccount();
        
         $result = Yii::$app->navhelper->readByKey($service, urldecode(Yii::$app->request->get('Key')));
         
@@ -176,14 +169,14 @@ class BankAccountController extends Controller
             Yii::$app->navhelper->loadmodel($result, $model);
         }else{
             Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-           return ['note' => '<div class="alert alert-danger">Error : '.$result.'</div>'];
+            echo '<div class="alert alert-danger">Error : '.$result.'</div>';
         }
 
 
         if(Yii::$app->request->isAjax){
             return $this->renderAjax('update', [
                 'model' => $model,
-                'Countries'=>$this->getCountries(),
+                'banks'=> Yii::$app->navhelper->dropdown('KenyaBanks','Bank_Code','Bank_Name')
             ]);
         }
 
@@ -193,12 +186,11 @@ class BankAccountController extends Controller
     public function actionDelete(){
         $service = Yii::$app->params['ServiceName']['SupplierBankAccounts'];
         $result = Yii::$app->navhelper->deleteData($service,urldecode(Yii::$app->request->get('Key')));
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if(!is_string($result)){
-            Yii::$app->session->setFlash('success','Signatory Removed Successfully .',true);
-            return $this->redirect(['index']);
+            return ['note' => '<div class="alert alert-success">Record Purged Successfully</div>'];
         }else{
-            Yii::$app->session->setFlash('error','Signatory Removed Successfully: '.$result,true);
-            return $this->redirect(['index']);
+            return ['note' => '<div class="alert alert-danger">Error Purging Record: '.$result.'</div>' ];
         }
     }
 
@@ -249,8 +241,8 @@ class BankAccountController extends Controller
                 $link = $updateLink =  '';
                
                
-                $updateLink = Html::a('<i class="fas fa-edit"></i>',['update','Key'=> urlencode($kin->Key) ],['class'=>'update btn btn-info btn-md']);
-                $deletelink = Html::a('<i class="fas fa-trash"></i>',['delete','Key'=> urlencode($kin->Key) ],['class'=>'mx-2 btn btn-danger btn-md']);
+                $updateLink = Html::a('<i class="fas fa-edit"></i>',['update','Key'=> urlencode($kin->Key) ],['class'=>'update btn btn-info btn-md','title' => 'Update Record.']);
+                $deletelink = Html::a('<i class="fas fa-trash"></i>',['delete','Key'=> urlencode($kin->Key) ],['class'=>'mx-2 btn btn-danger btn-md delete', 'title' => 'Purge a record.']);
                
 
                 $result['data'][] = [

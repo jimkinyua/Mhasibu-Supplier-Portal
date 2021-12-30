@@ -11,7 +11,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model frontend\models\AgendaDocument */
 
-$this->title = 'Create Record';
+$this->title = 'Update Record';
 $this->params['breadcrumbs'][] = ['label' => 'Recruitment ', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Create Applicant Profile', 'url' => ['applicantprofile/create']];
 ?>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Create Applicant Profile', 'url' =
 
     <?= $this->render('_form', [
         'model' => $model,
-        'banks'=> $banks
+        'postalCodes' => $postalCodes
 
     ]) ?>
 

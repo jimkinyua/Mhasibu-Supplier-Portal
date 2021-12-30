@@ -13,7 +13,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Company Directors';
+$this->title = 'Supplier Additional Addresses';
 ?>
 
 
@@ -33,7 +33,7 @@ $this->title = 'Company Directors';
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <?= \yii\helpers\Html::a('Add Director',['create','Key'=> $Applicant->Key],['class' => 'add btn btn-info btn-md mr-2 ']) ?>
+                        <?= \yii\helpers\Html::a('Add',['create','Key'=> $Applicant->Key],['class' => 'add btn btn-info btn-md mr-2 ']) ?>
                     </div>
                 </div>
             </div>
@@ -94,23 +94,22 @@ $script = <<<JS
           $('#leaves').DataTable({
            
             //serverSide: true,  
-            ajax: absolute+'directors/getsignatories?AppNo='+Docnum,
+            ajax: absolute+'addresses/list',
             paging: true,
             responsive:true,
             columns: [
                 { title: '#', data: 'index'},
-                { title: 'Name' ,data: 'Partner_Name'},
-                { title: 'ID No' ,data: 'Partner_ID_No'},
-                // { title: 'Occupation' ,data: 'Partner_Occupation'},
-                { title: 'PIN' ,data: 'PIN'},
-                // { title: 'Should Be Present' ,data: 'Must_Be_Present'}, 
-                { title: 'Phone No' ,data: 'Mobile_No__x002B_254'},   
-                { title: 'Action' ,data: 'action'},   
-               
+                { title: 'Address' ,data: 'Address'},
+                { title: 'Post Code' ,data: 'Post_Code'},
+                { title: 'City' ,data: 'City'},
+                { title: 'Country Code' ,data: 'Country_Code'},  
+                { title: 'Telephone 0No' ,data: 'Telephone_No'},  
+                { title: 'E-mail' ,data: 'E_mail'},  
+                { title: 'Actions' ,data: 'action'},
                 
             ] ,                              
            language: {
-                "zeroRecords": "No Directors to Show.."
+                "zeroRecords": "No Bank Addresses to Show.."
             },
             
             order : [[ 0, "asc" ]]
@@ -145,6 +144,21 @@ $script = <<<JS
                             .load(url); 
     
          });
+
+         $('#leaves').on('click','.delete',function(e){
+         e.preventDefault();
+           var secondThought = confirm("Are you sure you want to delete this record ?");
+           if(!secondThought){//if user says no, kill code execution
+                return;
+           }
+           
+         var url = $(this).attr('href');
+         $.get(url).done(function(msg){
+             $('.modal').modal('show')
+                    .find('.modal-body')
+                    .html(msg.note);
+         },'json');
+     });
         
         /*Handle dismissal eveent of modal */
         $('.modal').on('hidden.bs.modal',function(){

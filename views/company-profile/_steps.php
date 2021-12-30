@@ -164,11 +164,11 @@ $profileAction = Yii::$app->user->identity->id;
         <div class="card">
             <div class="card-header">
                 <div class="breadcrumbb flat">
-                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/' ?>" <?= Yii::$app->recruitment->currentaction('company-profile',['company-profile', 'index'])?'class="active"': '' ?>>Company Information</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/view' ?>" <?= Yii::$app->recruitment->currentaction('company-profile',['company-profile', 'index'])?'class="active"': '' ?>>Company Information</a>
                     <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'directors/index' ?>" <?= Yii::$app->recruitment->currentaction('directors','index')?'class="active"': '' ?>>Company Directors</a>
-                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('bank-account','index')?'class="active"': '' ?>>Supplier Bank Accounts</a>
-                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('addresses','index')?'class="active"': '' ?>>Additional Addresses</a>
-                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/declaration?Key='.$model->Key ?>" <?= Yii::$app->recruitment->currentaction('categories','index')?'class="active"': '' ?>>Item Categories>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'bank-account' ?>" <?= Yii::$app->recruitment->currentaction('bank-account','index')?'class="active"': '' ?>>Supplier Bank Accounts</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'addresses' ?>" <?= Yii::$app->recruitment->currentaction('addresses','index')?'class="active"': '' ?>>Additional Addresses</a>
+                    <a href="<?=  Yii::$app->recruitment->absoluteUrl() .'company-profile/submit' ?>" <?= Yii::$app->recruitment->currentaction('company-profile','submit')?'class="active"': '' ?>>Submit Profile</a>
         
                 </div>
            

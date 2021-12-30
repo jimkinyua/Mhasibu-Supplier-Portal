@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Create Applicant Profile', 'url' =
 
     <?= $this->render('_form', [
         'model' => $model,
-        'banks'=> $banks
+        'postalCodes' => $postalCodes
 
     ]) ?>
 

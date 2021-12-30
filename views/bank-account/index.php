@@ -142,6 +142,21 @@ $script = <<<JS
                             .load(url); 
     
          });
+
+         $('#leaves').on('click','.delete',function(e){
+         e.preventDefault();
+           var secondThought = confirm("Are you sure you want to delete this record ?");
+           if(!secondThought){//if user says no, kill code execution
+                return;
+           }
+           
+         var url = $(this).attr('href');
+         $.get(url).done(function(msg){
+             $('.modal').modal('show')
+                    .find('.modal-body')
+                    .html(msg.note);
+         },'json');
+     });
         
         /*Handle dismissal eveent of modal */
         $('.modal').on('hidden.bs.modal',function(){

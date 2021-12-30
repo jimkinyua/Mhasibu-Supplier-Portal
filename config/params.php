@@ -18,14 +18,7 @@ return [
     'DBCompanyName' =>env('DBCompanyName'),
 
     'codeUnits' => [
-        //'Portal_Workflows', //50019
-        'JobApplication', //50002
-        'AppraisalWorkflow', //50228 ********
-        'PortalReports', //50064
-        //'ContractRenewalStatusChange', // 50024
-        'PortalFactory', // 50062
-        'ImprestManagement', // 50017
-        'EmployeeExitManagement',
+       'PortalFactory' => 'PortalFactory', // 50062
     ],
     'SystemConfigs'=>[
         'UsingNTLM'=>env('UsingNTLM'),
@@ -44,9 +37,13 @@ return [
         'SupplierCategory'=>'SupplierCategory', //66057
         'SupplierPartnerDetails'=>'SupplierPartnerDetails',//66056
         'Countries'=>'Countries',//10
-
         'SupplierBankAccounts' => 'SupplierBankAccounts',  //66058
         'KenyaBanks' => 'KenyaBanks', // 66067
+        'SupplierAdditionalAddress' => 'SupplierAdditionalAddress', // 66059
+        'PostalCodes' => 'PostalCodes', //367
+        'PaymentTerms' => 'PaymentTerms', //4
+        'PaymentMethods' => 'PaymentMethods',// 427
+        'PortalFactory' => 'PortalFactory', // 50062
     ],
 
 ];

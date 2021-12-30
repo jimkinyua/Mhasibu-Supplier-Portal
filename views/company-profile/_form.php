@@ -12,8 +12,9 @@
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 //$this->title = Yii::$app->params['generalTitle'].' - Supplier Details'
+$absoluteUrl = \yii\helpers\Url::home(true);
 ?>
-<h2 class="title">Supplier : <?= $model->Name ?></h2>
+<h2 class="title">Supplier : <?= $model->No ?></h2>
 
 <?php
 
@@ -69,12 +70,14 @@ if(Yii::$app->session->hasFlash('success')){
                     <div class=" row col-md-12">
                         <div class="col-md-6">
                             <?= $form->field($model, 'Name')->textInput(['required' =>  true]) ?>
+                            <?= $form->field($model, 'Key')->hiddenInput(['readonly' =>  true])->label(false) ?>
                             
                             
 
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'Generated_Vendor_No')->textInput(['readonly' =>  true, 'diasbled' => true]) ?>
+                            <?= $form->field($model, 'Status')->textInput(['readonly' =>  true, 'diasbled' => true]) ?>
                            
                         </div>
                     </div>
@@ -108,7 +111,7 @@ if(Yii::$app->session->hasFlash('success')){
                             <?= $form->field($model, 'Address')->textInput([]) ?>
                             <?= $form->field($model, 'Address_2')->textInput([]) ?>
                             <?= $form->field($model, 'Post_Code')->dropDownList($towns,['prompt' => 'Select ...']) ?>
-                            <?= $form->field($model, 'City')->textInput([]) ?>
+                            <?= $form->field($model, 'City')->textInput(['readonly' =>  true]) ?>
 
                             <?= $form->field($model, 'Country_Region_Code')->dropDownList($countries,['prompt' => 'Select ... ']) ?>
 
@@ -213,7 +216,7 @@ if(Yii::$app->session->hasFlash('success')){
                         </div>
                         <div class="col-md-6">
                              <?= $form->field($model, 'Payment_Method_Code')->dropDownList($paymentMethods,['prompt' => 'select ...']) ?>
-                            <?php $form->field($model, 'HasAcceptedTermsAndConditions')->dropDownList([true => 'TRUE',false => 'FALSE'],['prompt' => 'Select ...']) ?>
+                            <?= $form->field($model, 'HasAcceptedTermsAndConditions')->dropDownList([true => 'Yes',false => 'No'],['prompt' => 'Select ...']) ?>
                             
 
                         </div>
@@ -227,9 +230,100 @@ if(Yii::$app->session->hasFlash('success')){
 		
 
         <div class="form-group">
-                    <?= Html::Button('Save Profile', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?php Html::Button('Save Profile', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+
+<input type="hidden" name="absolute" value="<?= $absoluteUrl ?>">
+<?php
+$script = <<<JS
+
+$(function() {
+
+    $('#vendorcard-name').on('change',(e) => {
+        globalFieldUpdate("VendorCard",'company-profile' ,"Name", e);
+    });
+
+    $('#vendorcard-address').on('change',(e) => {
+        globalFieldUpdate("VendorCard",'company-profile' ,"Address", e);
+    });
+
+    $('#vendorcard-post_code').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Post_Code", e,['City']);
+    });
+
+    $('#vendorcard-address_2').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Address_2", e);
+    });
+
+    $('#vendorcard-city').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"City", e);
+    });
+
+    $('#vendorcard-country_region_code').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Country_Region_Code", e);
+    });
+
+    $('#vendorcard-phone_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Phone_No", e);
+    });
+
+    $('#vendorcard-e_mail').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"E_Mail", e);
+    });
+    $('#vendorcard-home_page').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Home_Page", e);
+    });
+    $('#vendorcard-supplier_type').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Supplier_Type", e);
+    });
+    $('#vendorcard-agpo_certificate').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"AGPO_Certificate", e);
+    });
+    $('#vendorcard-trade_licennse_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Trade_Licennse_No", e);
+    });
+    $('#vendorcard-registration_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Registration_No", e);
+    });
+    $('#vendorcard-registration_date').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Registration_Date", e);
+    });
+    $('#vendorcard-tax_compliance_certificate_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Tax_Compliance_Certificate_No", e);
+    });
+    $('#vendorcard-tax_compliance_expiry_date').on('blur',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Tax_Compliance_Expiry_Date", e);
+    });
+    $('#vendorcard-vat_certificate_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"VAT_Certificate_No", e);
+    });
+    $('#vendorcard-pin_no').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"PIN_No", e);
+    });
+    $('#vendorcard-no_of_businesses_at_one_time').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"No_of_Businesses_at_one_time", e);
+    });
+    $('#vendorcard-payment_terms_code').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Payment_Terms_Code", e);
+    });
+    $('#vendorcard-payment_method_code').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"Payment_Method_Code", e);
+    });
+
+    $('#vendorcard-hasacceptedtermsandconditions').on('change',(e) => {
+        globalFieldUpdate("VendorCard", 'company-profile',"HasAcceptedTermsAndConditions", e);
+    });
+    
+
+    
+});
+
+
+JS;
+
+$this->registerJS($script);
+

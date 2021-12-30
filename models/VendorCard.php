@@ -49,7 +49,8 @@ class VendorCard extends Model
         return [
             [['Name', 'Phone_No', 'HasAcceptedTermsAndConditions'], 'required'],           
             ['HasAcceptedTermsAndConditions', 'compare', 'compareValue' => 1, 'message' => 'You should accept term Our Terms and Condiitions'],
-
+            ['Home_Page', 'url'],
+            ['E_Mail', 'email'],
         ];
     }
 
@@ -59,8 +60,21 @@ class VendorCard extends Model
     public function attributeLabels()
     {
         return [
-                  'HasAcceptedTermsAndConditions'=>'Accept Terms and Conditions'
+                  'HasAcceptedTermsAndConditions'=>'Do you Accept Our Terms and Conditions'
         ];
+    }
+
+    public function hasProfile()
+    {
+        $model = new VendorCard();
+        $service = Yii::$app->params['ServiceName']['VendorCard'];
+        $model = Yii::$app->navhelper->findOne($service,'','No', Yii::$app->user->identity->vendorNo);
+        if(is_object($model))
+        {
+            return true;
+        }
+
+        return false;
     }
 
 

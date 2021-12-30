@@ -180,7 +180,7 @@ function globalFieldUpdate(entity,controller = false, fieldName, ev, autoPopulat
 
              /*******End Field auto Population  */
               if((typeof msg) === 'string') { // A string is an error
-                  console.log(formField);
+                  console.log(`Form Field is: ${formField}`);
                   const parent = document.querySelector(formField);
                   const helpbBlock = parent.children[2];
                   helpbBlock.innerText = msg;

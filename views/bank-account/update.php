@@ -48,8 +48,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Recruitment ', 'url' => ['index']]
 
     <?= $this->render('_form', [
         'model' => $model,
-        'Countries' => $Countries,
-        // 'religion' => $religion
+        'banks'=> $banks
     ]) ?>
 
 </div>

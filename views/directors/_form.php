@@ -46,7 +46,7 @@ $absoluteUrl = \yii\helpers\Url::home(true);
                                    <?= $form->field($model, 'Nationality')->dropDownList(ArrayHelper::map($Countries, 'Code', 'Name'),['prompt' => '-- Select Option ---']) ?>
 
 
-                                   <?= $form->field($model,'Key')->textInput(['readonly' => true]) ?>
+                                   <?= $form->field($model,'Key')->hiddenInput(['readonly' => true])->label(false) ?>
                                 </div>
 
  

@@ -24,15 +24,18 @@ $absoluteUrl = \yii\helpers\Url::home(true);
                             <div class=" row col-md-12">
             
                                 <div class="col-md-6">
-                                    <?= $form->field($model, 'Bank_Account_No')->textInput(['required' =>  true,'autocomplete' => 'off']) ?>
-                                    <?= $form->field($model, 'Code')->dropdownList($banks, ['prompt' => 'Select ...']) ?>
+                                    <?= $form->field($model, 'Address')->textInput(['required' =>  true,'autocomplete' => 'off']) ?>
+                                    <?= $form->field($model, 'City')->textInput(['maxlength' => 20,'readonly' => true]) ?>
+                                    <?= $form->field($model, 'Physical_Location')->textInput(['maxlength' => 150]) ?>
+                                    <?= $form->field($model, 'E_mail')->textInput(['type' => 'email','autocomplete' => 'off']) ?>
                                     
                                     
                                 </div>
                                 
                                 <div class="col-md-6">
-                                    <?= $form->field($model, 'Name')->textInput(['required' =>  true]) ?>
-                                    <?= $form->field($model, 'SWIFT_Code')->textInput(['required' =>  true]) ?>
+                                    <?= $form->field($model, 'Post_Code')->dropdownList($postalCodes, ['prompt' => 'Select ...']) ?>
+                                    <?= $form->field($model, 'Country_Code')->textInput(['readonly' => true]) ?>
+                                    <?= $form->field($model, 'Telephone_No')->textInput(['type' => 'tel','autocomplete' => 'off']) ?>
                                     
                                     
                                     
@@ -58,34 +61,32 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 $script = <<<JS
 
 $(function() {
-    $('#bankaccount-bank_account_no').on('change',(e) => {
-        globalFieldUpdate("BankAccount",'bank-account',"Bank_Account_No", e);
+    $('#addresses-address').on('change',(e) => {
+        globalFieldUpdate("Addresses", false ,"Address", e);
     });
 
-    $('#bankaccount-code').on('change',(e) => {
-        globalFieldUpdate("BankAccount",'bank-account',"Code", e);
+    $('#addresses-post_code').on('change',(e) => {
+        globalFieldUpdate("Addresses", false,"Post_Code", e,['City','Country_Code']);
     });
 
-    $('#bankaccount-name').on('change',(e) => {
-        globalFieldUpdate("BankAccount",'bank-account',"Name", e);
+    $('#addresses-city').on('change',(e) => {
+        globalFieldUpdate("Addresses", false,"City", e);
     });
 
-    $('#bankaccount-swift_code').on('change',(e) => {
-        globalFieldUpdate("BankAccount",'bank-account',"SWIFT_Code", e);
+    $('#addresses-physical_location').on('change',(e) => {
+        globalFieldUpdate("Addresses", false,"Physical_Location", e);
     });
 
-   
+    $('#addresses-telephone_no').on('change',(e) => {
+        globalFieldUpdate("Addresses", false,"Telephone_No", e);
+    });
 
-
-
-
-
-    
+    $('#addresses-e_mail').on('change',(e) => {
+        globalFieldUpdate("Addresses", false,"E_mail", e);
+    });
+     
 });
 
-
-
 JS;
-
 $this->registerJS($script);
 
