@@ -78,16 +78,15 @@ $absoluteUrl = \yii\helpers\Url::home(true);
 <section class="signup bg-light my-5 p-5 text-center">
     <div class="container ">
     <?php
-    //print '<pre>';
-    //print_r($_SESSION); exit;
-if(Yii::$app->session->hasFlash('success')){
+   
+if(Yii::$app->session->hasFlash('success') && is_string(Yii::$app->session->getFlash('success'))){
     print ' <div class="alert alert-success alert-dismissable">
                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <h5><i class="icon fas fa-check"></i> Success!</h5>
  ';
     echo Yii::$app->session->getFlash('success');
     print '</div>';
-}else if(Yii::$app->session->hasFlash('error')){
+}else if(Yii::$app->session->hasFlash('error') && is_string(Yii::$app->session->getFlash('error'))){
     print ' <div class="alert alert-danger alert-dismissable">
                                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                     <h5><i class="icon fas fa-check"></i> Error!</h5>
